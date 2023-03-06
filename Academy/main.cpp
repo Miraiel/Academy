@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<string>
 using namespace std;
 
@@ -172,7 +172,7 @@ public:
 	void info()const
 	{
 		Human::info();
-		cout << speciality << " " << experiebce << " ëåò." << endl;
+		cout << speciality << " " << experiebce << " Ð»ÐµÑ‚." << endl;
 	}
 };
 
@@ -226,16 +226,16 @@ void main()
 
 #ifdef INHERITANCE_CHECK
 
-	Human human("Òóïåíêî", "Âàñèëèé", 20);
+	Human human("Ð¢ÑƒÐ¿ÐµÐ½ÐºÐ¾", "Ð’Ð°ÑÐ¸Ð»Ð¸Ð¹", 20);
 	human.info();
 
-	Student student("Èâàíîâ", "Èâàí", 18, "IT", "PV_211", 12, 100);
+	Student student("Ð˜Ð²Ð°Ð½Ð¾Ð²", "Ð˜Ð²Ð°Ð½", 18, "IT", "PV_211", 12, 100);
 	student.info();
 
 	Teacher teacher("Einstein", "Albert", 143, "Astronomy", 110);
 	teacher.info();
 
-	Graduate graduate("Ïåòðîâ", "Íèêîëàé", 21, "IT", "PV_211", 10, 80, "Îðãàíèçàöèÿ çàùèòû áåçîïàñíîñòè ñåòè");
+	Graduate graduate("ÐŸÐµÑ‚Ñ€Ð¾Ð²", "ÐÐ¸ÐºÐ¾Ð»Ð°Ð¹", 21, "IT", "PV_211", 10, 80, "ÐžÑ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸Ñ Ð·Ð°Ñ‰Ð¸Ñ‚Ñ‹ Ð±ÐµÐ·Ð¾Ð¿Ð°ÑÐ½Ð¾ÑÑ‚Ð¸ ÑÐµÑ‚Ð¸");
 	graduate.info();
 
 #endif // INHERITANCE_CHECK
