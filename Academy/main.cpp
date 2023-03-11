@@ -1,5 +1,6 @@
 ﻿#include<iostream>
 #include<string>
+#include<fstream>
 using namespace std;
 
 #define HUMAN_TAKE_PARAMETERS const std::string& last_name, const std::string& first_name, int age
@@ -57,7 +58,18 @@ public:
 		cout << last_name << " " << first_name << " " << age << endl;
 	}
 
+	virtual std::ostream& print(std::ostream& os)const
+	{
+		return os << last_name << "" << first_name << "" << age;
+	}
+
 };
+
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return obj.print(os);
+	//return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age() << endl;
+}
 
 #define STUDENT_TAKE_PARAMETERS const std::string& speciality, const std::string& group, double rating, double attendance
 #define STUDENT_GIVE_PARAMETERS speciality, group, rating, attendance
@@ -105,7 +117,7 @@ public:
 
 	//---------------------Constructors----------------------
 
-	Student(HUMAN_TAKE_PARAMETERS,STUDENT_TAKE_PARAMETERS) :Human(HUMAN_GIVE_PARAMETERS)
+	Student(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS) :Human(HUMAN_GIVE_PARAMETERS)
 	{
 		set_speciality(speciality);
 		set_group(group);
@@ -126,7 +138,14 @@ public:
 		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
 	}
 
+	std::ostream& print(std::ostream& os)const override
+	{
+		return Human::print(os) << speciality << " " << group << " " << rating << " " << attendance;
+	}
+
 };
+
+
 
 #define TEACHER_TAKE_PARAMETERS const std::string& speciality, int experiebce
 #define TEACHER_GIVE_PARAMETERS speciality, experiebce
@@ -174,6 +193,11 @@ public:
 		Human::info();
 		cout << speciality << " " << experiebce << " лет." << endl;
 	}
+
+	std::ostream& print(std::ostream& os)const override
+	{
+		return Human::print(os) << " " << speciality << " " << experiebce;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETERS  const std::string& subject
@@ -196,8 +220,8 @@ public:
 
 	//---------------------Constructors----------------------
 
-	Graduate(HUMAN_TAKE_PARAMETERS,STUDENT_TAKE_PARAMETERS,GRADUATE_TAKE_PARAMETERS)
-		:Student(HUMAN_GIVE_PARAMETERS,STUDENT_GIVE_PARAMETERS)
+	Graduate(HUMAN_TAKE_PARAMETERS, STUDENT_TAKE_PARAMETERS, GRADUATE_TAKE_PARAMETERS)
+		:Student(HUMAN_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
 	{
 		set_subject(subject);
 		cout << "GConstructor:\t" << this << endl;
@@ -215,10 +239,17 @@ public:
 		Student::info();
 		cout << subject << " " << endl;
 	}
+
+	std::ostream& print(std::ostream& os)const override
+	{
+		return Student::print(os) << " " << subject;
+	}
 };
 
 //#define INHERITANCE_CHECK
 #define POLIMORPHISM
+//#define HOME_T1
+//#define HOME_T2
 
 void main()
 {
@@ -240,7 +271,7 @@ void main()
 
 #endif // INHERITANCE_CHECK
 
-//---------------------Ganeralisation(ApCast)-----------------
+	//---------------------Ganeralisation(ApCast)-----------------
 
 	Human* group[] =
 	{
@@ -251,16 +282,58 @@ void main()
 		new Graduate("Schreder", "Hank", 40, "Criminalistic", "OBN", 95, 75, "How to catch Helizenberg")
 	};
 
-	cout << sizeof(group) / sizeof(group[0]) << endl;
-	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+#ifdef HOME_T1
+
+	ofstream fout;
+	fout.open("Academy.txt");
+	ifstream fin("Academy.txt");
+
+	if (fin.is_open())
 	{
-		cout << typeid(*group[i]).name() << endl;
-		group[i]->info();
-		cout << "\n--------------------------------\n";
+		for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+		{
+			fout << typeid(*group[i]).name() << endl;
+			fout << *group[i] << endl;
+			fout << "\n--------------------------------\n";
+		}
+
+		for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+		{
+			delete group[i];
+		}
+	}
+	else
+	{
+		cerr << "Error: file not found!" << endl;
 	}
 
-	for (int i = 0; i < sizeof(group)/sizeof(Human*); i++)
+	fout.close();
+	system("notepad Academy.txt");
+
+#endif // HOME_T1
+
+#ifdef HOME_T2
+
+	string list = "Academy2.txt";
+	ifstream fin;
+	fin.open(list);
+	if (fin.is_open())
 	{
-		delete group[i];
+		cout << "File open!\n" << endl;
+		string list;
+		while (!fin.eof())	//работает пока не дойдет до конца файла
+		{
+			list = "";
+			getline(fin, list);
+			cout << list << endl;
+		}
 	}
+	else
+	{
+		cout << "Error: file not open!" << endl;
+	}
+	fin.close();
+	
+#endif // HOME_T2
+
 }
