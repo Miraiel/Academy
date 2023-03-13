@@ -6,6 +6,15 @@ using namespace std;
 #define HUMAN_TAKE_PARAMETERS const std::string& last_name, const std::string& first_name, int age
 #define HUMAN_GIVE_PARAMETERS last_name, first_name, age
 
+enum alligment				//enum (Enumeration - Перечисление) - набор целочисленных именнованных констант	
+{
+	last_name_widht = 15,
+	first_name_widht = 10,
+	age_widht = 5,
+	speciality_widht=25,
+	nameric_width=8
+};
+
 class Human
 {
 	std::string last_name;
@@ -63,29 +72,28 @@ public:
 		return os << last_name << "" << first_name << "" << age;
 	}
 
-	
-
-};
-
-void save(Human** group, const int n, const char* filename)
-{
-	std::ofstream fout(filename);
-
-	for (int i = 0; i < n; i++)
+	virtual std::ofstream& print(std::ofstream& ofs)const
 	{
-		fout << typeid(*group[i]).name()<<":\t" << *group[i];
-
+		ofs.width(alligment::last_name_widht);							//задаем длину last_name, значение берем из enum
+		ofs << left;													//выравнивание по левому краю
+		ofs << last_name;
+		ofs.width(alligment::first_name_widht);
+		ofs << first_name;
+		ofs.width(alligment::age_widht);
+		ofs << age;
+		return ofs;
 	}
-	fout.close();
-	std::string s_comand = "start botepad";
-	s_comand += filename;
-	system(s_comand.c_str());
-}
+};
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
 	return obj.print(os);
 	//return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age() << endl;
+}
+
+std::ofstream& operator<<(std::ofstream& ofs, const Human& obj)
+{
+	return obj.print(ofs);
 }
 
 #define STUDENT_TAKE_PARAMETERS const std::string& speciality, const std::string& group, double rating, double attendance
@@ -160,6 +168,20 @@ public:
 		return Human::print(os) << speciality << " " << group << " " << rating << " " << attendance;
 	}
 
+	std::ofstream& print(std::ofstream& ofs)const override
+	{
+		Human::print(ofs);
+		ofs.width(alligment::speciality_widht);
+		ofs << left;
+		ofs << speciality;
+		ofs.width(alligment::nameric_width);
+		ofs << group;
+		ofs.width(alligment::nameric_width);
+		ofs << rating;
+		ofs.width(alligment::nameric_width);
+		ofs << attendance;
+		return ofs;
+	}
 };
 
 
@@ -215,6 +237,16 @@ public:
 	{
 		return Human::print(os) << " " << speciality << " " << experiebce;
 	}
+
+	std::ofstream& print(std::ofstream& ofs)const override
+	{
+		Human::print(ofs);
+		ofs.width(alligment::speciality_widht);
+		ofs << speciality;
+		ofs.width(alligment::nameric_width);
+		ofs << experiebce;
+		return ofs;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETERS  const std::string& subject
@@ -261,7 +293,28 @@ public:
 	{
 		return Student::print(os) << " " << subject;
 	}
+	
+	std::ofstream& print(std::ofstream& ofs)const override
+	{
+		Student::print(ofs);
+		ofs << subject;
+		return ofs;
+	}
 };
+
+void save(Human** group, const int n, const char* filename)
+{
+	std::ofstream fout(filename);
+	for (int i = 0; i < n; i++)
+	{
+		fout << typeid(*group[i]).name() << ":\t"; // fout не пишем все в одно выражение!
+		fout << *group[i] << endl;
+	}
+	fout.close();
+	std::string s_comand = "start notepad ";
+	s_comand += filename;
+	system(s_comand.c_str());
+}
 
 //#define INHERITANCE_CHECK
 #define POLIMORPHISM
@@ -306,12 +359,12 @@ void main()
 		cout << "\n--------------------------------\n";
 	}
 
+	save(group, sizeof(group) / sizeof(group[0]), "group.txt");
+
 	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
 	{
 		delete group[i];
 	}
-
-	save(group, sizeof(group) / sizeof(group[0]), "group.txt");
 
 #ifdef HOME_T1
 

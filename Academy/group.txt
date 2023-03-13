@@ -1,0 +1,5 @@
+class Student:	Pinkman        Jassie    20   Chemistry                WW_220  89      92      
+class Student:	Vercetti       Tomas     30   Criminalistic            Vice    98      99      
+class Teacher:	Whaite         Walter    50   Chermistry               25      
+class Teacher:	Diaz           Ricardo   50   Wepons distribution      20      
+class Graduate:	Schreder       Hank      40   Criminalistic            OBN     95      75      How to catch Helizenberg
