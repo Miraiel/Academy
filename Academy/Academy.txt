@@ -1,0 +1,20 @@
+class Student
+PinkmanJassie20Chemistry WW_220 89 92
+
+--------------------------------
+class Student
+VercettiTomas30Criminalistic Vice 98 99
+
+--------------------------------
+class Teacher
+WhaiteWalter50 Chermistry 25
+
+--------------------------------
+class Teacher
+DiazRicardo50 Wepons distribution 20
+
+--------------------------------
+class Graduate
+SchrederHank40Criminalistic OBN 95 75 How to catch Helizenberg
+
+--------------------------------
