@@ -63,7 +63,24 @@ public:
 		return os << last_name << "" << first_name << "" << age;
 	}
 
+	
+
 };
+
+void save(Human** group, const int n, const char* filename)
+{
+	std::ofstream fout(filename);
+
+	for (int i = 0; i < n; i++)
+	{
+		fout << typeid(*group[i]).name()<<":\t" << *group[i];
+
+	}
+	fout.close();
+	std::string s_comand = "start botepad";
+	s_comand += filename;
+	system(s_comand.c_str());
+}
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
@@ -282,6 +299,20 @@ void main()
 		new Graduate("Schreder", "Hank", 40, "Criminalistic", "OBN", 95, 75, "How to catch Helizenberg")
 	};
 
+	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		cout << typeid(*group[i]).name() << endl;
+		cout << *group[i] << endl;
+		cout << "\n--------------------------------\n";
+	}
+
+	for (int i = 0; i < sizeof(group) / sizeof(Human*); i++)
+	{
+		delete group[i];
+	}
+
+	save(group, sizeof(group) / sizeof(group[0]), "group.txt");
+
 #ifdef HOME_T1
 
 	ofstream fout;
@@ -333,7 +364,7 @@ void main()
 		cout << "Error: file not open!" << endl;
 	}
 	fin.close();
-	
+
 #endif // HOME_T2
 
 }
