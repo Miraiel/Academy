@@ -2,17 +2,21 @@
 #include<string>
 #include<fstream>
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+
 
 #define HUMAN_TAKE_PARAMETERS const std::string& last_name, const std::string& first_name, int age
 #define HUMAN_GIVE_PARAMETERS last_name, first_name, age
 
-enum alligment				//enum (Enumeration - Перечисление) - набор целочисленных именнованных констант	
+enum alligment																		//enum (Enumeration - Перечисление) - набор целочисленных именнованных констант	
 {
 	last_name_widht = 15,
 	first_name_widht = 10,
 	age_widht = 5,
-	speciality_widht=25,
-	nameric_width=8
+	speciality_widht = 25,
+	nameric_width = 8
 };
 
 class Human
@@ -69,19 +73,25 @@ public:
 
 	virtual std::ostream& print(std::ostream& os)const
 	{
-		return os << last_name << "" << first_name << "" << age;
+		return os << last_name << " " << first_name << " " << age;
 	}
 
 	virtual std::ofstream& print(std::ofstream& ofs)const
 	{
-		ofs.width(alligment::last_name_widht);							//задаем длину last_name, значение берем из enum
-		ofs << left;													//выравнивание по левому краю
+		ofs.width(alligment::last_name_widht);									//задаем длину last_name, значение берем из enum
+		ofs << left;															//выравнивание по левому краю
 		ofs << last_name;
 		ofs.width(alligment::first_name_widht);
 		ofs << first_name;
 		ofs.width(alligment::age_widht);
 		ofs << age;
 		return ofs;
+	}
+
+	virtual std::ifstream& scan(std::ifstream& ifs)
+	{
+		ifs >> last_name >> first_name >> age;
+		return ifs;
 	}
 };
 
@@ -94,6 +104,11 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 std::ofstream& operator<<(std::ofstream& ofs, const Human& obj)
 {
 	return obj.print(ofs);
+}
+
+std::ifstream& operator>>(std::ifstream& ifs, Human& obj)
+{
+	return obj.scan(ifs);
 }
 
 #define STUDENT_TAKE_PARAMETERS const std::string& speciality, const std::string& group, double rating, double attendance
@@ -182,6 +197,21 @@ public:
 		ofs << attendance;
 		return ofs;
 	}
+
+	virtual std::ifstream& scan(std::ifstream& ifs)override
+	{
+		Human::scan(ifs);
+		char sz_buffer[alligment::speciality_widht] = {};
+		ifs.read(sz_buffer, alligment::speciality_widht - 1);										//метод reab() читает заданное количество байт из файла
+		for (int i = alligment::speciality_widht - 2; sz_buffer[i] == ' '; i--)sz_buffer[i] = 0;
+		while (sz_buffer[0] == ' ')
+			for (int i = 0; sz_buffer[i]; i++)sz_buffer[i] = sz_buffer[i + 1];
+		speciality = sz_buffer;
+		ifs >> group;
+		ifs >> rating;
+		ifs >> attendance;
+		return ifs;
+	}
 };
 
 
@@ -247,6 +277,19 @@ public:
 		ofs << experiebce;
 		return ofs;
 	}
+
+	std::ifstream& scan(std::ifstream& ifs)override
+	{
+		Human::scan(ifs);
+		char sz_buffer[alligment::speciality_widht] = {};
+		ifs.read(sz_buffer, alligment::speciality_widht - 1);
+		for (int i = alligment::speciality_widht - 2; sz_buffer[i] == ' '; i--)sz_buffer[i] = 0;
+		while (sz_buffer[0] == ' ')
+			for (int i = 0; sz_buffer[i]; i++)sz_buffer[i] = sz_buffer[i + 1];
+		speciality = sz_buffer;
+		ifs >> experiebce;
+		return ifs;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETERS  const std::string& subject
@@ -293,21 +336,35 @@ public:
 	{
 		return Student::print(os) << " " << subject;
 	}
-	
+
 	std::ofstream& print(std::ofstream& ofs)const override
 	{
 		Student::print(ofs);
 		ofs << subject;
 		return ofs;
 	}
+
+	std::ifstream& scan(std::ifstream& ifs)
+	{
+		Student::scan(ifs);
+		std::getline(ifs, subject);
+		return ifs;
+	}
 };
+
+Human* HumanFactory(const std::string& type)									//создаем новые объекты, создаем для чтения из файла
+{
+	if (type.find("Student") != std::string::npos)return new Student("", "", 0, "", "", 0, 0);
+	if (type.find("Teacher") != std::string::npos)return new Teacher("", "", 0, "", 0);
+	if (type.find("Graduate") != std::string::npos)return new Graduate("", "", 0, "", "", 0, 0, "");
+}
 
 void save(Human** group, const int n, const char* filename)
 {
 	std::ofstream fout(filename);
 	for (int i = 0; i < n; i++)
 	{
-		fout << typeid(*group[i]).name() << ":\t"; // fout не пишем все в одно выражение!
+		fout << typeid(*group[i]).name() << ":\t";								// fout не пишем все в одно выражение!
 		fout << *group[i] << endl;
 	}
 	fout.close();
@@ -316,8 +373,58 @@ void save(Human** group, const int n, const char* filename)
 	system(s_comand.c_str());
 }
 
+Human** load(const char* filename, int& n)
+{
+	Human** group = nullptr;													//если файл небыл найден, то группа не создана
+	n = 0;
+
+	std::ifstream fin(filename);
+	if (fin.is_open())
+	{
+		//1. Оппределяем количество строк в файле
+
+		while (!fin.eof())
+		{
+			std::string buffer;
+			std::getline(fin, buffer);
+			if (buffer.empty())continue;
+			n++;
+		}
+
+		//2. Выделяем память под объекты. Каждый объект занимает отдельную строку в файле
+
+		group = new Human * [n] {};
+
+		//3. Возвращаемся в начало файла для того, чтобы прочитать его еще раз
+
+		cout << "Позиция курсора в файле: " << fin.tellg() << endl;
+		fin.clear();
+		fin.seekg(0);															//задает get позицию курсора (get - взять, прочитать)
+
+		//4. Выполняем повторное чтение
+
+		std::string obj_type;
+		for (int i = 0; i < n; i++)
+		{
+			std::getline(fin, obj_type, ':');
+			fin.ignore();
+
+			if (obj_type.empty())continue;
+			group[i] = HumanFactory(obj_type);
+			fin >> *group[i];
+		}
+
+		fin.close();
+	}
+	else
+	{
+		std::cerr << "Error: file not found";
+	}
+	return group;
+}
+
 //#define INHERITANCE_CHECK
-#define POLIMORPHISM
+//#define POLIMORPHISM
 //#define HOME_T1
 //#define HOME_T2
 
@@ -341,6 +448,7 @@ void main()
 
 #endif // INHERITANCE_CHECK
 
+#ifdef POLIMORPHISM
 	//---------------------Ganeralisation(ApCast)-----------------
 
 	Human* group[] =
@@ -365,6 +473,8 @@ void main()
 	{
 		delete group[i];
 	}
+
+#endif // POLIMORPHISM
 
 #ifdef HOME_T1
 
@@ -419,5 +529,21 @@ void main()
 	fin.close();
 
 #endif // HOME_T2
+
+	int n = 0;																	// размер группы будет вычеслен фун-ей load()
+	Human** group = load("group.txt", n);
+
+	cout << "\n-----------------------------------------------------------\n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << *group[i] << endl;
+		cout << "\n-----------------------------------------------------------\n";
+	}
+	for (int i = 0; i < n; i++)
+	{
+		delete group[i];
+	}
+
+	delete group;
 
 }
