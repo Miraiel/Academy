@@ -1,4 +1,4 @@
-#include<Windows.h>
+ï»¿#include<Windows.h>
 #include<iostream>
 using namespace std;
 
@@ -11,8 +11,8 @@ public:
 
 	virtual void info()const
 	{
-		cout << "Ïëîùàäü ôèãóðû: " << get_area() << endl;
-		cout << "Ïåðèìåòð ôèãóðû: " << get_perimeter() << endl;
+		cout << "ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÑŒ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹: " << get_area() << endl;
+		cout << "ÐŸÐµÑ€Ð¸Ð¼ÐµÑ‚Ñ€ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹: " << get_perimeter() << endl;
 		draw();
 	}
 };
@@ -63,7 +63,7 @@ namespace Geometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Äëèíà ñòîðîíû: " << side << endl;
+			cout << "Ð”Ð»Ð¸Ð½Ð° ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñ‹: " << side << endl;
 			Shape::info();
 		}
 	};
@@ -140,8 +140,8 @@ namespace Geometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Äëèíà ïðÿìîóãîëüíèêà: " << length << endl;
-			cout << "Øèðèíà ïðÿìîóãîëüíèêà: " << width << endl;
+			cout << "Ð”Ð»Ð¸Ð½Ð° Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ°: " << length << endl;
+			cout << "Ð¨Ð¸Ñ€Ð¸Ð½Ð° Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐ°: " << width << endl;
 			Shape::info();
 		}
 	};
@@ -153,9 +153,9 @@ void main()
 
 	Geometry::Square square(8);
 	/*
-	cout << "Äëèíà ñòîðîíû êâàäðàòà: " << square.get_side() << endl;
-	cout << "Ïëîùàäü êâàäðàòà: " << square.get_area() << endl;
-	cout << "Ïåðèìåòð êâàäðàò: " << square.get_perimeter() << endl;
+	cout << "Ð”Ð»Ð¸Ð½Ð° ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñ‹ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << square.get_side() << endl;
+	cout << "ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÑŒ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << square.get_area() << endl;
+	cout << "ÐŸÐµÑ€Ð¸Ð¼ÐµÑ‚Ñ€ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚: " << square.get_perimeter() << endl;
 	square.draw();
 	*/
 	square.info();
