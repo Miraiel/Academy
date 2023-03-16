@@ -1,4 +1,5 @@
-﻿#include<Windows.h>
+﻿#define RED RGB(255,0,0)
+#include<Windows.h>
 #include<iostream>
 using namespace std;
 
@@ -114,14 +115,15 @@ namespace Geometry
 
 		void draw()const override
 		{
-			/*for (int i = 0; i < width; i++)
+			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < length; j++)
 				{
 					cout << "* ";
 				}
 				cout << endl;
-			}*/
+			}
+			/*
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 255, 255));
@@ -135,7 +137,7 @@ namespace Geometry
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 
-			ReleaseDC(hwnd, hdc);
+			ReleaseDC(hwnd, hdc);*/
 		}
 		void info()const override
 		{
@@ -145,7 +147,185 @@ namespace Geometry
 			Shape::info();
 		}
 	};
+
+	class Circle :public Shape
+	{
+		double radius;
+	public:
+
+		Circle(double radius)
+		{
+			set_radius(radius);
+		}
+
+		~Circle() {};
+
+		double get_radius()const
+		{
+			return radius;
+		}
+		void set_radius(double radius)
+		{
+			if (radius < 5)radius = 5;
+			if (radius > 10)radius = 10;
+			this->radius = radius;
+		}
+
+		double get_area()const override
+		{
+			return radius * radius * 3.14;
+		}
+
+		double get_perimeter()const override
+		{
+			return 2 * 3.14 * radius;
+		}
+
+		void draw()const override
+		{
+			HWND handle = GetConsoleWindow();
+			HDC hdc = GetDC(handle);
+			
+			//создаём перо (контур)
+			HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255)); //сплошная линия, толщиной 2 пикселя, цвет - синий
+			//создаём кисть (заливка)
+			HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));//сплошной черный
+			SelectObject(hdc, hPen);// указываем перо 
+			SelectObject(hdc, hBrush);//указываем кисть
+			//рисуем эллипс
+			Ellipse(hdc, 300, 300, 200, 200);
+
+		/*
+			int x, y;
+
+			cout << "Draw circle:\n\n";
+
+			for (y = 0; y < 2 * radius + 1; y++) {
+				for (x = 0; x < 2 * radius + 1; x++) {
+					if ((int)hypot(abs(radius - x), abs(radius - y)) == radius) { // Функция hypot вычисляет длину гипотенузы прямоугольного треугольника с заданной длиной двух сторон x и y.Вызов hypot эквивалентен следующему :sqrt(x*x + y*y);
+						cout << "*";
+					}
+					else {
+						cout << " ";
+					}
+				}
+				cout << "\n";
+			}
+
+			cout << "\n";
+			*/
+		}
+
+		void info()const override
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Радиус круга: " << radius << endl;
+			Shape::info();
+		}
+
+	};
+
+	class Triangle :public Shape
+	{
+		double side_l;
+		double side_r;
+		double base;
+		double height;
+	public:
+		Triangle(double side_l, double side_r, double base, double height)
+		{
+			set_side_l(side_l);
+			set_side_r(side_r);
+			set_base(base);
+			set_height(height);
+		}
+		~Triangle() {};
+
+		double get_side_l()const
+		{
+			return side_l;
+		}
+
+		double get_side_r()const
+		{
+			return side_r;
+		}
+
+		double get_base()const
+		{
+			return base;
+		}
+
+		double get_height()const
+		{
+			return height;
+		}
+
+		void set_side_l(double side_l)
+		{
+			if (side_l < 5)side_l = 5;
+			if (side_l > 15)side_l = 15;
+			this->side_l = side_l;
+		}
+
+		void set_side_r(double side_r)
+		{
+			if (side_r < 5)side_r = 5;
+			if (side_r > 15)side_r = 15;
+			this->side_r = side_r;
+		}
+
+		void set_base(double base)
+		{
+			if (base < 5)base = 5;
+			if (base > 15)base = 15;
+			this->base = base;
+		}
+
+		void set_height(double height)
+		{
+			if (height < 5)height = 5;
+			if (height > 20)height = 20;
+			this->height = height;
+		}
+
+		double get_area()const override
+		{
+			return 0.5 * base * height;
+		}
+		double get_perimeter()const override
+		{
+			return side_l + side_r + base;
+		}
+		void draw()const override
+		{
+			
+			for (int i = 1; i <= height; ++i)
+			{
+				for (int j = height; j > i; --j)
+
+					putchar(' ');
+
+				for (int j = 1; j < 2 * i; ++j)
+
+					putchar('*');
+
+			}
+
+		}
+		
+
+		void info()const override
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Длина сторон труегольника: " << side_l << side_r << base << endl;
+			cout << "Высота треугольника: " << height << endl;
+			Shape::info();
+		}
+	};
 }
+
+
 
 void main()
 {
@@ -162,5 +342,11 @@ void main()
 
 	Geometry::Rectangle rect(5, 12);
 	rect.info();
+
+	Geometry::Circle rad(5);
+	rad.info();
+
+	Geometry::Triangle tri(3, 7, 9, 5);
+	tri.info();
 
 }
