@@ -351,11 +351,6 @@ namespace Geometry
 	};
 }
 
-class Triangle :public Shape {
-
-};
-
-
 
 void main()
 {
