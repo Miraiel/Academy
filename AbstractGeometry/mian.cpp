@@ -1,14 +1,91 @@
 ﻿#define _USE_MATH_DEFINES
-#define RED RGB(0,0,0)
+//#define RED RGB(0,0,0)
 #include<Windows.h>
 #include<iostream>
 using namespace std;
 
 //#define HOM_W
 
+enum limits
+{
+	MIN_SIZE = 50,
+	MAX_SIZE = 500,
+	MIN_LINE_WIDTH = 1,
+	MAX_LINE_WIDTH = 30,
+	MIN_START_X = 100,
+	MAX_START_X = 1000,
+	MIN_START_Y = 100,
+	MAX_STZRT_Y = 700
+};
+
+enum Color
+{
+	red = 0x000000FF,
+	green = 0x0000FF00,
+	blue = 0x00FF0000,
+	yellow = 0x00FFFF,
+	white = 0x00FFFFFF
+};
+
+#define SHAPE_TAKE_PARAMETERS int start_x, int stast_y, int line_width, Color color
+#define SHAPE_GIVE_PARAMETERS start_x, stast_y, line_width, color
+
 class Shape
 {
+protected:
+
+	int start_x;
+	int start_y;
+	int line_width;
+	Color color;
+
 public:
+
+	Shape(SHAPE_TAKE_PARAMETERS):color(color)
+	{
+		set_start_x(start_x);
+		set_start_y(start_y);
+		set_line_width(line_width);
+	}
+
+	virtual ~Shape() {}
+
+	int get_start_x()const
+	{
+		return start_x;
+	}
+
+	int get_start_y()const
+	{
+		return start_y;
+	}
+
+	int get_line_width()const
+	{
+		return line_width;
+	}
+
+	void set_start_x(int start_x)
+	{
+		if (start_x < limits::MIN_START_X)start_x = limits::MIN_START_X;
+		if (start_y < limits::MIN_START_X)start_x = limits::MIN_START_X;
+		this->start_x = start_x;
+	}
+
+	void set_start_y(int start_y)
+	{
+		if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
+		if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
+		this->start_y = start_y;
+	}
+
+	void set_line_width(int line_width)
+	{
+		if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
+		if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
+		this->line_width = line_width;
+	}
+
 	virtual double get_area()const = 0;
 	virtual double get_perimeter()const = 0;
 	virtual	void draw()const = 0;
@@ -27,7 +104,7 @@ namespace Geometry
 	{
 		double side;
 	public:
-		Square(double side)
+		Square(double side, SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS)
 		{
 			set_side(side);
 		}
@@ -39,8 +116,8 @@ namespace Geometry
 		}
 		void set_side(double side)
 		{
-			if (side < 5)side = 5;
-			if (side > 20)side = 20;
+			if (side < limits::MIN_SIZE)side = limits::MIN_SIZE;
+			if (side > limits::MIN_SIZE)side = limits::MAX_SIZE;
 			this->side = side;
 		}
 
@@ -79,7 +156,7 @@ namespace Geometry
 		double length;
 		double width;
 	public:
-		Rectangle(double width, double length)
+		Rectangle(double width, double length, SHAPE_TAKE_PARAMETERS) : Shape(SHAPE_GIVE_PARAMETERS)
 		{
 			set_width(width);
 			set_length(length);
@@ -97,14 +174,14 @@ namespace Geometry
 		}
 		void set_length(double length)
 		{
-			if (length < 3)length = 3;
-			if (length > 20)length = 20;
+			if (length < limits::MIN_SIZE)length = limits::MIN_SIZE;
+			if (length > limits::MAX_SIZE)length = limits::MAX_SIZE;
 			this->length = length;
 		}
 		void set_width(double width)
 		{
-			if (width < 5)width = 5;
-			if (width > 30)width = 30;
+			if (width < limits::MIN_SIZE)width = limits::MIN_SIZE;
+			if (width > limits::MAX_SIZE)width = limits::MAX_SIZE;
 			this->width = width;
 		}
 
@@ -120,6 +197,7 @@ namespace Geometry
 
 		void draw()const override
 		{
+			/*
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < length; j++)
@@ -128,21 +206,22 @@ namespace Geometry
 				}
 				cout << endl;
 			}
-			/*
+			*/
+
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
-			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 255, 255));
-			HBRUSH hBrush = CreateSolidBrush(RGB(255, 255, 255));
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
 
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			::Rectangle(hdc, 100, 100, 400, 200);
+			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + length);
 
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 
-			ReleaseDC(hwnd, hdc);*/
+			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
@@ -363,7 +442,7 @@ namespace Geometry
 		double radius;
 
 	public:
-		Circle(double radius)
+		Circle(double radius, SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS)
 		{
 			set_radius(radius);
 		}
@@ -376,8 +455,8 @@ namespace Geometry
 		}
 		void set_radius(double radius)
 		{
-			if (radius < 50)radius = 50;
-			if (radius > 300)radius = 300;
+			if (radius < limits::MIN_SIZE)radius = limits::MIN_SIZE;
+			if (radius > limits::MAX_SIZE)radius = limits::MAX_SIZE;
 			this->radius = radius;
 		}
 
@@ -396,14 +475,14 @@ namespace Geometry
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
 
-			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(0, 0, 255));
-			HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
 
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 			//--------------------------------------------------//
 
-			::Ellipse(hdc, 100, 100, 200, 200);
+			::Ellipse(hdc, start_x, start_y, start_x + 2 * radius, start_y + 2 * radius);
 
 			//--------------------------------------------------//
 			DeleteObject(hPen);
@@ -421,7 +500,7 @@ void main()
 {
 	setlocale(LC_ALL, "");
 
-	Geometry::Square square(8);
+	Geometry::Square square(8, 100, 100, 5,Geometry::Color::yellow);
 	/*
 	cout << "Длина стороны квадрата: " << square.get_side() << endl;
 	cout << "Площадь квадрата: " << square.get_area() << endl;
@@ -430,10 +509,10 @@ void main()
 	*/
 	square.info();
 
-	Geometry::Rectangle rect(5, 12);
+	Geometry::Rectangle rect(150, 77, 200, 100, 5, Geometry::Color::red);
 	rect.info();
 
-	Geometry::Circle rad(100);
+	Geometry::Circle rad(200, 200, 100, 5, Geometry::Color::green);
 	rad.info();
 
 	//Geometry::Triangle tri(3, 7, 9, 5);
