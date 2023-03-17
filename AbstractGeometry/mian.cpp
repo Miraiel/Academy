@@ -1,4 +1,4 @@
-﻿#define RED RGB(255,0,0)
+﻿#define RED RGB(0,0,0)
 #include<Windows.h>
 #include<iostream>
 using namespace std;
@@ -68,6 +68,8 @@ namespace Geometry
 			Shape::info();
 		}
 	};
+
+	//------------------------------------------------------------------------------------------//
 
 	class Rectangle :public Shape
 	{
@@ -148,6 +150,8 @@ namespace Geometry
 		}
 	};
 
+	//------------------------------------------------------------------------------------------//
+
 	class Circle :public Shape
 	{
 		double radius;
@@ -183,26 +187,33 @@ namespace Geometry
 
 		void draw()const override
 		{
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 			HWND handle = GetConsoleWindow();
 			HDC hdc = GetDC(handle);
-			
+
 			//создаём перо (контур)
 			HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255)); //сплошная линия, толщиной 2 пикселя, цвет - синий
 			//создаём кисть (заливка)
 			HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));//сплошной черный
-			SelectObject(hdc, hPen);// указываем перо 
+			SelectObject(hdc, hPen);// указываем перо
 			SelectObject(hdc, hBrush);//указываем кисть
 			//рисуем эллипс
-			Ellipse(hdc, 300, 300, 200, 200);
+			Ellipse(hdc, 350, 350, 500, 500);
 
-		/*
-			int x, y;
+			DeleteObject(handle);
+			DeleteObject(hPen);
 
-			cout << "Draw circle:\n\n";
-
-			for (y = 0; y < 2 * radius + 1; y++) {
-				for (x = 0; x < 2 * radius + 1; x++) {
-					if ((int)hypot(abs(radius - x), abs(radius - y)) == radius) { // Функция hypot вычисляет длину гипотенузы прямоугольного треугольника с заданной длиной двух сторон x и y.Вызов hypot эквивалентен следующему :sqrt(x*x + y*y);
+			ReleaseDC(handle, hdc);
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////
+			/*
+			for (int y = 0; y < 2 * radius + 1; y++) 
+			{
+				for (int x = 0; x < 2 * radius + 1; x++) 
+				{
+					if ((int)hypot(abs(radius - x), abs(radius - y)) == radius)
+					{ 
 						cout << "*";
 					}
 					else {
@@ -214,16 +225,32 @@ namespace Geometry
 
 			cout << "\n";
 			*/
+			///////////////////////////////////////////////////////////////////////////////////////////////////
+			/*
+			double y1, y2;
+			for (int i = 1; i <= 2 * radius; i++)
+			{
+				for (int j = 1; j <= 2 * radius; j++)
+				{
+					y1 = radius + sqrt(radius * radius - pow(radius - j, 2));
+					y2 = radius - sqrt(radius * radius - pow(radius - j, 2));
+					if (i > y2 && i < y1) std::cout << "**";
+					else std::cout << "  ";
+				}
+				std::cout << std::endl;
+			}
+			*/
 		}
-
+		
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
 			cout << "Радиус круга: " << radius << endl;
 			Shape::info();
 		}
-
 	};
+
+	//------------------------------------------------------------------------------------------//
 
 	class Triangle :public Shape
 	{
@@ -309,12 +336,11 @@ namespace Geometry
 				for (int j = 1; j < 2 * i; ++j)
 
 					putchar('*');
-
+					putchar('\n');
 			}
 
 		}
 		
-
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
@@ -324,6 +350,10 @@ namespace Geometry
 		}
 	};
 }
+
+class Triangle :public Shape {
+
+};
 
 
 
@@ -343,7 +373,7 @@ void main()
 	Geometry::Rectangle rect(5, 12);
 	rect.info();
 
-	Geometry::Circle rad(5);
+	Geometry::Circle rad(4);
 	rad.info();
 
 	Geometry::Triangle tri(3, 7, 9, 5);
