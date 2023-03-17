@@ -1,7 +1,10 @@
-﻿#define RED RGB(0,0,0)
+﻿#define _USE_MATH_DEFINES
+#define RED RGB(0,0,0)
 #include<Windows.h>
 #include<iostream>
 using namespace std;
+
+//#define HOM_W
 
 class Shape
 {
@@ -152,6 +155,10 @@ namespace Geometry
 
 	//------------------------------------------------------------------------------------------//
 
+#ifdef HOM_W
+
+
+
 	class Circle :public Shape
 	{
 		double radius;
@@ -188,7 +195,7 @@ namespace Geometry
 		void draw()const override
 		{
 			/////////////////////////////////////////////////////////////////////////////////////////////////////
-			
+
 			HWND handle = GetConsoleWindow();
 			HDC hdc = GetDC(handle);
 
@@ -205,15 +212,15 @@ namespace Geometry
 			DeleteObject(hPen);
 
 			ReleaseDC(handle, hdc);
-			
+
 			/////////////////////////////////////////////////////////////////////////////////////////////////////
 			/*
-			for (int y = 0; y < 2 * radius + 1; y++) 
+			for (int y = 0; y < 2 * radius + 1; y++)
 			{
-				for (int x = 0; x < 2 * radius + 1; x++) 
+				for (int x = 0; x < 2 * radius + 1; x++)
 				{
 					if ((int)hypot(abs(radius - x), abs(radius - y)) == radius)
-					{ 
+					{
 						cout << "*";
 					}
 					else {
@@ -241,7 +248,7 @@ namespace Geometry
 			}
 			*/
 		}
-		
+
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
@@ -326,7 +333,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			
+
 			for (int i = 1; i <= height; ++i)
 			{
 				for (int j = height; j > i; --j)
@@ -336,11 +343,11 @@ namespace Geometry
 				for (int j = 1; j < 2 * i; ++j)
 
 					putchar('*');
-					putchar('\n');
+				putchar('\n');
 			}
 
 		}
-		
+
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
@@ -349,6 +356,64 @@ namespace Geometry
 			Shape::info();
 		}
 	};
+#endif // HOM_W
+
+	class Circle : public Shape
+	{
+		double radius;
+
+	public:
+		Circle(double radius)
+		{
+			set_radius(radius);
+		}
+
+		~Circle() {};
+
+		double get_radius()const
+		{
+			return radius;
+		}
+		void set_radius(double radius)
+		{
+			if (radius < 50)radius = 50;
+			if (radius > 300)radius = 300;
+			this->radius = radius;
+		}
+
+		double get_area()const override
+		{
+			return M_PI * radius * radius;
+		}
+
+		double get_perimeter()const override
+		{
+			return 2 * M_PI * radius;
+		}
+
+		void draw()const override
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+
+			HPEN hPen = CreatePen(PS_SOLID, 5, RGB(0, 0, 255));
+			HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 255));
+
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+			//--------------------------------------------------//
+
+			::Ellipse(hdc, 100, 100, 200, 200);
+
+			//--------------------------------------------------//
+			DeleteObject(hPen);
+			DeleteObject(hBrush);
+
+			ReleaseDC(hwnd, hdc);
+		}
+	};
+
+
 }
 
 
@@ -368,10 +433,10 @@ void main()
 	Geometry::Rectangle rect(5, 12);
 	rect.info();
 
-	Geometry::Circle rad(4);
+	Geometry::Circle rad(100);
 	rad.info();
 
-	Geometry::Triangle tri(3, 7, 9, 5);
-	tri.info();
+	//Geometry::Triangle tri(3, 7, 9, 5);
+	//tri.info();
 
 }
