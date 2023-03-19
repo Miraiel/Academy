@@ -5,101 +5,101 @@
 using namespace std;
 
 //#define HOM_W
-
-enum limits
+namespace Geometry
 {
-	MIN_SIZE = 50,
-	MAX_SIZE = 500,
-	MIN_LINE_WIDTH = 1,
-	MAX_LINE_WIDTH = 30,
-	MIN_START_X = 100,
-	MAX_START_X = 1000,
-	MIN_START_Y = 100,
-	MAX_STZRT_Y = 700
-};
 
-enum Color
-{
-	red = 0x000000FF,
-	green = 0x0000FF00,
-	blue = 0x00FF0000,
-	yellow = 0x00FFFF,
-	white = 0x00FFFFFF
-};
+	enum limits
+	{
+		MIN_SIZE = 50,
+		MAX_SIZE = 500,
+		MIN_LINE_WIDTH = 1,
+		MAX_LINE_WIDTH = 30,
+		MIN_START_X = 100,
+		MAX_START_X = 1000,
+		MIN_START_Y = 100,
+		MAX_STZRT_Y = 700
+	};
+
+	enum Color
+	{
+		red = 0x000000FF,
+		green = 0x0000FF00,
+		blue = 0x00FF0000,
+		yellow = 0x00FFFF,
+		white = 0x00FFFFFF
+	};
 
 #define SHAPE_TAKE_PARAMETERS int start_x, int stast_y, int line_width, Color color
 #define SHAPE_GIVE_PARAMETERS start_x, stast_y, line_width, color
 
-class Shape
-{
-protected:
-
-	int start_x;
-	int start_y;
-	int line_width;
-	Color color;
-
-public:
-
-	Shape(SHAPE_TAKE_PARAMETERS):color(color)
+	class Shape
 	{
-		set_start_x(start_x);
-		set_start_y(start_y);
-		set_line_width(line_width);
-	}
+	protected:
 
-	virtual ~Shape() {}
+		int start_x;
+		int start_y;
+		int line_width;
+		Color color;
 
-	int get_start_x()const
-	{
-		return start_x;
-	}
+	public:
 
-	int get_start_y()const
-	{
-		return start_y;
-	}
+		Shape(SHAPE_TAKE_PARAMETERS) :color(color)
+		{
+			set_start_x(start_x);
+			set_start_y(start_y);
+			set_line_width(line_width);
+		}
 
-	int get_line_width()const
-	{
-		return line_width;
-	}
+		virtual ~Shape() {}
 
-	void set_start_x(int start_x)
-	{
-		if (start_x < limits::MIN_START_X)start_x = limits::MIN_START_X;
-		if (start_y < limits::MIN_START_X)start_x = limits::MIN_START_X;
-		this->start_x = start_x;
-	}
+		int get_start_x()const
+		{
+			return start_x;
+		}
 
-	void set_start_y(int start_y)
-	{
-		if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
-		if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
-		this->start_y = start_y;
-	}
+		int get_start_y()const
+		{
+			return start_y;
+		}
 
-	void set_line_width(int line_width)
-	{
-		if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
-		if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
-		this->line_width = line_width;
-	}
+		int get_line_width()const
+		{
+			return line_width;
+		}
 
-	virtual double get_area()const = 0;
-	virtual double get_perimeter()const = 0;
-	virtual	void draw()const = 0;
+		void set_start_x(int start_x)
+		{
+			if (start_x < limits::MIN_START_X)start_x = limits::MIN_START_X;
+			if (start_y < limits::MIN_START_X)start_x = limits::MIN_START_X;
+			this->start_x = start_x;
+		}
 
-	virtual void info()const
-	{
-		cout << "Площадь фигуры: " << get_area() << endl;
-		cout << "Периметр фигуры: " << get_perimeter() << endl;
-		draw();
-	}
-};
+		void set_start_y(int start_y)
+		{
+			if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
+			if (start_y < limits::MIN_START_Y)start_y = limits::MIN_START_Y;
+			this->start_y = start_y;
+		}
 
-namespace Geometry
-{
+		void set_line_width(int line_width)
+		{
+			if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
+			if (line_width < limits::MIN_LINE_WIDTH)line_width = limits::MIN_LINE_WIDTH;
+			this->line_width = line_width;
+		}
+
+		virtual double get_area()const = 0;
+		virtual double get_perimeter()const = 0;
+		virtual	void draw()const = 0;
+
+		virtual void info()const
+		{
+			cout << "Площадь фигуры: " << get_area() << endl;
+			cout << "Периметр фигуры: " << get_perimeter() << endl;
+			draw();
+		}
+	};
+
 	class Square :public Shape
 	{
 		double side;
@@ -491,8 +491,6 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
-
-
 }
 
 
@@ -500,7 +498,11 @@ void main()
 {
 	setlocale(LC_ALL, "");
 
-	Geometry::Square square(8, 100, 100, 5,Geometry::Color::yellow);
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD coord;
+	SetConsoleDisplayMode(hConsole, CONSOLE_FULLSCREEN_MODE, &coord);
+
+	Geometry::Square square(8, 7, 7, 5, Geometry::Color::blue);
 	/*
 	cout << "Длина стороны квадрата: " << square.get_side() << endl;
 	cout << "Площадь квадрата: " << square.get_area() << endl;
