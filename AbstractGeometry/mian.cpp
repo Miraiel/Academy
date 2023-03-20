@@ -90,14 +90,33 @@ namespace Geometry
 
 		virtual double get_area()const = 0;
 		virtual double get_perimeter()const = 0;
-		virtual	void draw()const = 0;
+		virtual	void draw(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const
+		{
+			//void* lpfn - указатель на функцию рисования
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
 
-		virtual void info()const
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+
+			(*lpfn)(hdc, start_x, start_y, start_x + width, start_y + height);
+
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
+		virtual void info(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const
 		{
 			cout << "Площадь фигуры: " << get_area() << endl;
 			cout << "Периметр фигуры: " << get_perimeter() << endl;
-			draw();
+			draw(lpfn, width, height);
 		}
+
+
 	};
 	//------------------------------------------------------------------------------------------//
 
@@ -197,7 +216,7 @@ namespace Geometry
 			return (length + width) * 2;
 		}
 
-		void draw()const override
+		void draw(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const override
 		{
 			/*
 			for (int i = 0; i < width; i++)
@@ -225,12 +244,17 @@ namespace Geometry
 
 			ReleaseDC(hwnd, hdc);
 		}
-		void info()const override
+		void info(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const override
 		{
 			cout << typeid(*this).name() << endl;
 			cout << "Длина прямоугольника: " << length << endl;
 			cout << "Ширина прямоугольника: " << width << endl;
-			Shape::info();
+			Shape::info(lpfn, width, height);
+		}
+
+		void info()const
+		{
+			info(::Rectangle, width, length);
 		}
 	};
 
@@ -441,7 +465,7 @@ namespace Geometry
 			cout << "Длина сторон труегольника: " << side_l << side_r << base << endl;
 			cout << "Высота треугольника: " << height << endl;
 			Shape::info();
-		}
+}
 	};
 #endif // HOM_W
 
@@ -478,7 +502,7 @@ namespace Geometry
 			return 2 * M_PI * radius;
 		}
 
-		void draw()const override
+		void draw(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const override
 		{
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
@@ -498,6 +522,18 @@ namespace Geometry
 
 			ReleaseDC(hwnd, hdc);
 		}
+
+		virtual void info(BOOL(*lpfn)(HDC, int, int, int, int), double width, double height)const override
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Радиус: " << radius << endl;
+			Shape::info(lpfn, radius, radius);
+		}
+
+		void info()const
+		{
+			info(::Ellipse, radius, radius);
+		}
 	};
 
 	class Triangle :public Shape
@@ -511,7 +547,7 @@ namespace Geometry
 		void info()const
 		{
 			cout << "Высота треугольника: " << get_height() << endl;
-			Shape::info();
+			//Shape::info();
 		}
 	};
 
@@ -592,7 +628,7 @@ namespace Geometry
 	class IsoscelesTriangle :public Triangle
 	{
 		double side;
-	
+
 	public:
 		IsoscelesTriangle(double side, SHAPE_TAKE_PARAMETERS) : Triangle(SHAPE_GIVE_PARAMETERS)
 		{
