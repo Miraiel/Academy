@@ -99,7 +99,9 @@ namespace Geometry
 			draw();
 		}
 	};
+	//------------------------------------------------------------------------------------------//
 
+	/*
 	class Square :public Shape
 	{
 		double side;
@@ -147,7 +149,7 @@ namespace Geometry
 			cout << "Длина стороны: " << side << endl;
 			Shape::info();
 		}
-	};
+	};*/
 
 	//------------------------------------------------------------------------------------------//
 
@@ -230,6 +232,12 @@ namespace Geometry
 			cout << "Ширина прямоугольника: " << width << endl;
 			Shape::info();
 		}
+	};
+
+	class Square : public Rectangle
+	{
+	public:
+		Square(double side, SHAPE_TAKE_PARAMETERS) :Rectangle(side, side, SHAPE_GIVE_PARAMETERS) {}
 	};
 
 	//------------------------------------------------------------------------------------------//
@@ -491,6 +499,272 @@ namespace Geometry
 			ReleaseDC(hwnd, hdc);
 		}
 	};
+
+	class Triangle :public Shape
+	{
+	public:
+		Triangle(SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS) {}
+		~Triangle() {}
+
+		virtual double get_height()const = 0;
+
+		void info()const
+		{
+			cout << "Высота треугольника: " << get_height() << endl;
+			Shape::info();
+		}
+	};
+
+	//------------------------------------------------------------------------------------------//
+
+	class EquilateralTriangle :public Triangle
+	{
+		double side;
+	public:
+		EquilateralTriangle(double side, SHAPE_TAKE_PARAMETERS) :Triangle(SHAPE_GIVE_PARAMETERS)
+		{
+			set_side(side);
+		}
+
+		~EquilateralTriangle() {}
+
+		double get_side()const
+		{
+			return side;
+		}
+
+		void set_side(double side)
+		{
+			if (side < limits::MIN_SIZE)side = limits::MIN_SIZE;
+			if (side > limits::MAX_SIZE)side = limits::MAX_SIZE;
+			this->side = side;
+		}
+
+		double get_height()const
+		{
+			return sqrt(pow(side, 2) - pow(side / 2, 2));
+		}
+
+		double get_area()const
+		{
+			return side * get_height() / 2;
+		}
+
+		double get_perimeter()const
+		{
+			return side * 3;
+		}
+
+		void draw()const
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN hpen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
+
+			SelectObject(hdc, hpen);
+			SelectObject(hdc, hBrush);
+
+			POINT vertex[] =
+			{
+				{start_x, start_y + side},
+				{start_x + side,start_y + side},
+				{start_x + side / 2,start_y + side - get_height()}
+			};
+
+			::Polygon(hdc, vertex, 3);
+
+			DeleteObject(hpen);
+			DeleteObject(hBrush);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
+		void info()const
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Длина стороны " << side << endl;
+			Triangle::info();
+		}
+
+	};
+
+	class IsoscelesTriangle :public Triangle
+	{
+		double side;
+	
+	public:
+		IsoscelesTriangle(double side, SHAPE_TAKE_PARAMETERS) : Triangle(SHAPE_GIVE_PARAMETERS)
+		{
+			set_side(side);
+		}
+
+		~IsoscelesTriangle() {}
+
+		double get_side()const
+		{
+			return side;
+		}
+
+		void set_side(double side)
+		{
+			if (side < limits::MIN_SIZE)side = limits::MIN_SIZE;
+			if (side > limits::MAX_SIZE)side = limits::MAX_SIZE;
+			this->side = side;
+		}
+
+		double get_base()const
+		{
+			return sqrt(2 * pow(side, 2));
+		}
+
+		double get_height()const
+		{
+			return sqrt(4 * pow(side, 2) - pow(get_base(), 2)) / 2;
+		}
+
+		double get_area()const
+		{
+			return get_base() * get_height() / 2;
+		}
+
+		double get_area_2()const
+		{
+			return get_base() / 4 * sqrt(4 * pow(side, 2) - pow(get_base(), 2));
+		}
+
+		double get_perimeter()const
+		{
+			return side * 2 + get_base();
+		}
+
+		void draw()const
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN hpen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
+
+			SelectObject(hdc, hpen);
+			SelectObject(hdc, hBrush);
+
+			POINT vertex[] =
+			{
+				{start_x, start_y + side},
+				{start_x + get_base(),start_y + side},
+				{start_x + get_base() / 2,start_y + side - get_height()}
+			};
+
+			::Polygon(hdc, vertex, 3);
+
+			DeleteObject(hpen);
+			DeleteObject(hBrush);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
+		void info()const
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Длина стороны " << side << endl;
+			cout << "Площадь 2 вариант " << get_area_2() << endl;
+			Triangle::info();
+		}
+	};
+
+	class RightTriangl :public Triangle
+	{
+		double side1, side2;
+
+	public:
+
+		RightTriangl(double side1, double side2, SHAPE_TAKE_PARAMETERS) :Triangle(SHAPE_GIVE_PARAMETERS)
+		{
+			set_side_1(side1);
+			set_side_2(side2);
+		}
+
+		~RightTriangl() {}
+
+		double get_side_1()const
+		{
+			return side1;
+		}
+
+		double get_side_2()const
+		{
+			return side2;
+		}
+
+		void set_side_1(double side1)
+		{
+			if (side1 < limits::MIN_SIZE)side1 = limits::MIN_SIZE;
+			if (side1 > limits::MAX_SIZE)side1 = limits::MAX_SIZE;
+			this->side1 = side1;
+		}
+
+		void set_side_2(double side2)
+		{
+			if (side2 < limits::MIN_SIZE)side2 = limits::MIN_SIZE;
+			if (side2 > limits::MAX_SIZE)side2 = limits::MAX_SIZE;
+			this->side2 = side2;
+		}
+
+		double get_height()const
+		{
+			return side2;
+		}
+
+		double get_hypotenuse()const
+		{
+			return sqrt(side1 * side1 + side2 * side2);
+		}
+
+		double get_area()const
+		{
+			return side1 * side2 / 2;
+		}
+
+		double get_perimeter()const
+		{
+			return side1 + side2 + get_hypotenuse();
+		}
+
+		void draw()const
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN hpen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
+
+			SelectObject(hdc, hpen);
+			SelectObject(hdc, hBrush);
+
+			POINT vertex[] =
+			{
+				{start_x,start_y},
+				{start_x, start_y + get_height()},
+				{start_x + side1,start_y + get_height()},
+			};
+
+			::Polygon(hdc, vertex, 3);
+
+			DeleteObject(hpen);
+			DeleteObject(hBrush);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
+		void info()const
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Катет 1: " << side1 << endl;
+			cout << "Катет 2: " << side2 << endl;
+			cout << "Высота: " << get_height() << endl;
+			cout << "Гипотенуза: " << get_hypotenuse() << endl;
+			Triangle::info();
+		}
+	};
 }
 
 
@@ -502,7 +776,7 @@ void main()
 	COORD coord;
 	SetConsoleDisplayMode(hConsole, CONSOLE_FULLSCREEN_MODE, &coord);
 
-	Geometry::Square square(8, 7, 7, 5, Geometry::Color::blue);
+	Geometry::Square square(200, 400, 50, 5, Geometry::Color::blue);
 	/*
 	cout << "Длина стороны квадрата: " << square.get_side() << endl;
 	cout << "Площадь квадрата: " << square.get_area() << endl;
@@ -511,13 +785,18 @@ void main()
 	*/
 	square.info();
 
-	Geometry::Rectangle rect(150, 77, 200, 100, 5, Geometry::Color::red);
+	Geometry::Rectangle rect(250, 77, 200, 100, 5, Geometry::Color::red);
 	rect.info();
 
-	Geometry::Circle rad(200, 200, 100, 5, Geometry::Color::green);
+	Geometry::Circle rad(100, 100, 300, 5, Geometry::Color::green);
 	rad.info();
 
-	//Geometry::Triangle tri(3, 7, 9, 5);
-	//tri.info();
+	Geometry::EquilateralTriangle eq_triangl(300, 700, 50, 5, Geometry::Color::yellow);
+	eq_triangl.info();
 
+	Geometry::IsoscelesTriangle is_triangl(200, 600, 80, 5, Geometry::Color::red);
+	is_triangl.info();
+
+	Geometry::RightTriangl ri_triangl(150, 50, 850, 50, 5, Geometry::Color::white);
+	ri_triangl.info();
 }

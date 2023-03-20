@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Shape" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAUAAAAAAAAAQIAABIAAAEBYAAAAACAQAAAAiAAAAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::Rectangle" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAEAABAAAAAQAEQEIAAAAAAAAgAAAAQEAAAgAAAAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::Circle" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAACAgAAQAAAAIACAAAAAgAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::Square" Collapsed="true">
+    <Position X="12" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::Triangle" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgBIAAiAAgAAAQQBAgIAAABAACCAAAAAQAAAAgAAIAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::EquilateralTriangle" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAACIAAAAAIAQAAAIIAAAAAAACAAAAAQAAAAgAAIAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::IsoscelesTriangle" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACIiAAAAAAQAAAAIAAAAAgAAAAAAARAQAAgAAIAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Geometry::RightTriangl" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACIAAAAAQAYAAAIIAAAACAAAAAAAAQAAAAgAAIAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Geometry::limits" Collapsed="true">
+    <Position X="13.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAADAAAgABAAAAAAAAEAABAAAQAAAAAAgAAAAA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Geometry::Color" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAIEAAAAAAAAAAAAIAAAAAAAAgA=</HashCode>
+      <FileName>mian.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
