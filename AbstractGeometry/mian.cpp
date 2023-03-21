@@ -875,8 +875,8 @@ namespace Geometry
 			{
 				{start_x,start_y + side},
 				{start_x+base_d,start_y+base_d},
-				{start_x-get_base_dk(),start_y+get_height()},
-				{start_x+base_a,start_y}
+				{start_x+get_base_dk(),start_y+side},
+				{start_x+get_base_dk() + base_a,start_y + side}
 			};
 
 			::Polygon(hdc, vertex, 4);
@@ -897,6 +897,8 @@ namespace Geometry
 		}
 
 	};
+
+
 }
 
 
@@ -932,7 +934,7 @@ void main()
 	Geometry::RightTriangl ri_triangl(150, 50, 850, 50, 5, Geometry::Color::white);
 	ri_triangl.info();
 
-	Geometry::IsoscelesTrapezoid is_trapezoid(300, 500, 700, 300, 400, 5, Geometry::Color::green);
+	Geometry::IsoscelesTrapezoid is_trapezoid(800,800, 700, 400, 400, 5, Geometry::Color::green);
 	is_trapezoid.info();
 
 }
