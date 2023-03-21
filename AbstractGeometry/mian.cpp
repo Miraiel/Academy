@@ -765,6 +765,138 @@ namespace Geometry
 			Triangle::info();
 		}
 	};
+
+	class Trapezoid :public Shape
+	{
+	public:
+		Trapezoid(SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS) {}
+		~Trapezoid() {}
+
+		virtual double get_middle_line()const = 0;
+
+		void info()const
+		{
+			cout << "Высота трапеции: " << get_middle_line() << endl;
+			Shape::info();
+		}
+	};
+
+	class IsoscelesTrapezoid :public Trapezoid
+	{
+		double side;
+		double base_a;
+		double base_d;
+
+	public:
+
+		IsoscelesTrapezoid(double side, double base_a, double base_d, SHAPE_TAKE_PARAMETERS) :Trapezoid(SHAPE_GIVE_PARAMETERS)
+		{
+			set_side(side);
+			set_base_a(base_a);
+			set_base_d(base_d);
+		}
+
+		~IsoscelesTrapezoid() {}
+
+		double get_side()const
+		{
+			return side;
+		}
+		
+		double get_base_a()const
+		{
+			return base_a;
+		}
+
+		double get_base_d()const
+		{
+			return base_d;
+		}
+
+		void set_side(double side)
+		{
+			if (side < limits::MIN_SIZE)side = limits::MIN_SIZE;
+			if (side > limits::MAX_SIZE)side = limits::MAX_SIZE;
+		}
+
+		void set_base_a(double base_a)
+		{
+			if (base_a < limits::MIN_SIZE)base_a = limits::MIN_SIZE;
+			if (base_a > limits::MAX_SIZE)base_a = limits::MAX_SIZE;
+		}
+
+		void set_base_d(double base_d)
+		{
+			if (base_d < limits::MIN_SIZE)base_d = limits::MIN_SIZE;
+			if (base_d > limits::MAX_SIZE)base_d = limits::MAX_SIZE;
+		}
+
+		double get_middle_line()const
+		{
+			return (base_a + base_d) / 2;
+		}
+
+		double get_height()const
+		{
+			return sqrt(pow(side, 2) - pow((base_d - base_a) / 2, 2));
+		}
+
+		double get_base_dk()const
+		{
+			return sqrt(pow(side, 2) - pow(get_height(), 2));
+		}
+
+		double get_area()const
+		{
+			return get_middle_line() * get_height();
+		}
+
+		double get_perimeter()const
+		{
+			return base_a + base_d + 2 * side;
+		}
+
+		double get_perimeter_2()const
+		{
+			return 2 * get_middle_line() + base_a + base_d;
+		}
+
+		void draw()const
+		{
+			HWND hwnd = GetConsoleWindow();
+			HDC hdc = GetDC(hwnd);
+			HPEN hpen = CreatePen(PS_SOLID, line_width, color);
+			HBRUSH hBrush = CreateSolidBrush(color);
+
+			SelectObject(hdc, hpen);
+			SelectObject(hdc, hBrush);
+
+			POINT vertex[] =
+			{
+				{start_x,start_y + side},
+				{start_x+base_d,start_y+base_d},
+				{start_x-get_base_dk(),start_y+get_height()},
+				{start_x+base_a,start_y}
+			};
+
+			::Polygon(hdc, vertex, 4);
+
+			DeleteObject(hpen);
+			DeleteObject(hBrush);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
+		void info()const
+		{
+			cout << typeid(*this).name() << endl;
+			cout << "Периметр 2 вариант: " << get_perimeter_2() << endl;
+			cout << "Средняя линия: " << get_middle_line() << endl;
+			cout << "Высота трапеции: " << get_height() << endl;
+			Shape::info();
+		}
+
+	};
 }
 
 
@@ -799,4 +931,8 @@ void main()
 
 	Geometry::RightTriangl ri_triangl(150, 50, 850, 50, 5, Geometry::Color::white);
 	ri_triangl.info();
+
+	Geometry::IsoscelesTrapezoid is_trapezoid(300, 500, 700, 300, 400, 5, Geometry::Color::green);
+	is_trapezoid.info();
+
 }
